@@ -1,0 +1,19 @@
+.leads-table {
+  width: 100%;
+  background: white;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.leads-table th,
+.leads-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.leads-table th {
+  background: #f8fafc;
+  text-align: left;
+}

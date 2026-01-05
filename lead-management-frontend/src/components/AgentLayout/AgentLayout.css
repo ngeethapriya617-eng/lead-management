@@ -1,0 +1,41 @@
+.agent-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.agent-sidebar {
+  width: 200px;
+  background: #0f172a;
+  color: white;
+  padding: 20px;
+}
+
+.agent-sidebar a {
+  color: #cbd5f5;
+  text-decoration: none;
+  display: block;
+  margin-top: 15px;
+}
+
+.agent-sidebar a:hover {
+  color: white;
+}
+
+.agent-main {
+  flex: 1;
+  background: #f1f5f9;
+}
+
+.agent-header {
+  height: 60px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.agent-content {
+  padding: 20px;
+}
