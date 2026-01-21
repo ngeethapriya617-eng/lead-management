@@ -6,6 +6,7 @@ from .serializers import LeadSerializer
 from rest_framework.permissions import IsAuthenticated
 from core.models import User
 from core.serializers import UserSerializer
+from core.models import AuditLog
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def agent_leads(request):
@@ -22,6 +23,20 @@ def update_lead_status(request, lead_id):
     lead.status = request.data.get('status')
     lead.save()
     serializer = LeadSerializer(lead)
+    old_status = lead.status
+
+    lead.status = request.data.get("status")
+    lead.save()
+
+    AuditLog.objects.create(
+        actor=request.user,
+        entity_type="Lead",
+        entity_id=lead.id,
+        action="STATUS_CHANGE",
+        old_value={"status": old_status},
+        new_value={"status": lead.status}
+    )
+
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -90,10 +105,18 @@ def toggle_user_status(request, user_id):
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return Response({"detail": "User not found"}, status=404)
+    old_status = user.is_active
 
     user.is_active = not user.is_active
     user.save()
-
+    AuditLog.objects.create(
+    actor=request.user,
+    entity_type="User",
+    entity_id=user.id,
+    action="STATUS_CHANGE",
+    old_value={"is_active": old_status},
+    new_value={"is_active": user.is_active}
+    )
     return Response({
         "id": user.id,
         "username": user.username,
