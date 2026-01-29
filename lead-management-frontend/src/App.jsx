@@ -4,7 +4,7 @@ import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers/AdminUsers";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AgentLeads from "./pages/AgentLeads/AgentLeads";
-
+import AdminAuditLogs from "./pages/AdminAuditLogs/AdminAuditLogs";
 function App() {
   return (
     <Routes>
@@ -35,6 +35,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+      path="/admin/audit-logs"
+      element={
+        <ProtectedRoute>
+          <AdminAuditLogs />
+        </ProtectedRoute>
+      }
+    />
 
       <Route path="/" element={<Login />} />
     </Routes>

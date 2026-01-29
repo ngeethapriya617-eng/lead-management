@@ -5,8 +5,10 @@ from .models import Lead,User
 from .serializers import LeadSerializer
 from rest_framework.permissions import IsAuthenticated
 from core.models import User
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer , AuditLogSerializer, AuditLogSerializer
 from core.models import AuditLog
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def agent_leads(request):
@@ -98,6 +100,12 @@ def create_user(request):
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def toggle_user_status(request, user_id):
+    if user.role == "ADMIN" and User.objects.filter(role="ADMIN", is_active=True).count() == 1:
+        return Response(
+            {"detail": "Cannot deactivate the last active admin"},
+            status=400
+        )
+
     if request.user.role != "ADMIN":
         return Response({"detail": "Unauthorized"}, status=403)
 
@@ -124,3 +132,13 @@ def toggle_user_status(request, user_id):
         "role": user.role,
         "is_active": user.is_active
     })
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def admin_audit_logs(request):
+    if request.user.role != "ADMIN":
+        return Response({"detail": "Unauthorized"}, status=403)
+
+    logs = AuditLog.objects.all().order_by("-created_at")
+    serializer = AuditLogSerializer(logs, many=True)
+    return Response(serializer.data)

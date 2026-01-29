@@ -17,9 +17,10 @@ function Login() {
     });
 
     localStorage.setItem("accessToken", res.data.access);
-
+    localStorage.setItem("refreshToken", res.data.refresh);
+    
     // Redirect to home, routes decide next
-    window.location.href = "/";
+    window.location.href = "/admin/dashboard";
   } catch (err) {
     setError("Invalid username or password");
   }
